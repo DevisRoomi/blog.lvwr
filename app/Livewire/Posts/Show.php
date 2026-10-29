@@ -4,8 +4,10 @@ namespace App\Livewire\Posts;
 
 use App\Models\Post;
 use App\Models\PostView;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('layouts.public')]
 class Show extends Component
 {
     public Post $post;

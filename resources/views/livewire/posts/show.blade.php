@@ -13,11 +13,11 @@
     ></div>
 
     <!-- Navbar Minimalis -->
-    <header class="border-b border-zinc-200 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/80 backdrop-blur sticky top-0 z-40">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-            <a href="{{ route('home') }}" wire:navigate class="font-mono text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition flex items-center gap-1.5">
+    <header class="border-b border-zinc-200/80 dark:border-zinc-800/60 bg-white/70 dark:bg-zinc-950/70 backdrop-blur sticky top-0 z-40">
+        <div class="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+            <a href="{{ route('home') }}" wire:navigate class="font-mono text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition flex items-center gap-1.5">
                 <span aria-hidden="true">&larr;</span>
-                <span>Semua Catatan</span>
+                <span>catatan</span>
             </a>
 
             <div class="flex items-center gap-3">
@@ -25,8 +25,9 @@
                     x-data 
                     x-on:click="$flux.appearance = $flux.dark ? 'light' : 'dark'" 
                     type="button" 
-                    class="p-1.5 rounded-md text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition" 
+                    class="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition" 
                     aria-label="Toggle dark mode"
+                    title="Ganti tema"
                 >
                     <svg x-show="$flux.dark" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -36,9 +37,19 @@
                     </svg>
                 </button>
 
-                <a href="{{ route('home') }}" wire:navigate class="font-mono text-xs px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700">
-                    ~/devblog
-                </a>
+                <div x-data="{ copied: false }">
+                    <button 
+                        x-on:click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2000)" 
+                        type="button" 
+                        class="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition text-xs font-mono flex items-center gap-1 cursor-pointer"
+                        title="Salin tautan artikel"
+                    >
+                        <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                        </svg>
+                        <span x-text="copied ? 'tersalin' : 'bagikan'"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -49,7 +60,7 @@
     @endphp
 
     <!-- Konten Artikel Lengkap -->
-    <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <main class="max-w-2xl mx-auto px-5 py-14">
         <article 
             x-data 
             x-init="
@@ -70,33 +81,18 @@
                 });
             "
         >
-            <header class="mb-10 pb-8 border-b border-zinc-200 dark:border-zinc-800/80">
-                <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-zinc-500 dark:text-zinc-400 mb-4">
-                    <div class="flex flex-wrap items-center gap-2">
-                        <time datetime="{{ $post->created_at->toIso8601String() }}">
-                            {{ $post->created_at->format('d M Y') }}
-                        </time>
-                        <span>&bull;</span>
-                        <span>{{ $readTime }} min read</span>
-                        <span>&bull;</span>
-                        <span>{{ number_format($post->views_count) }} views</span>
-                    </div>
-
-                    <div x-data="{ copied: false }">
-                        <button 
-                            x-on:click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2000)" 
-                            type="button" 
-                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition cursor-pointer"
-                        >
-                            <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                            </svg>
-                            <span x-text="copied ? 'Tersalin!' : 'Bagikan'"></span>
-                        </button>
-                    </div>
+            <header class="mb-10 pb-8 border-b border-zinc-200/80 dark:border-zinc-800/80">
+                <div class="flex items-center gap-2 text-xs font-mono text-zinc-400 dark:text-zinc-500 mb-4">
+                    <time datetime="{{ $post->created_at->toIso8601String() }}">
+                        {{ $post->created_at->format('d M Y') }}
+                    </time>
+                    <span>&bull;</span>
+                    <span>{{ $readTime }} min baca</span>
+                    <span>&bull;</span>
+                    <span>{{ number_format($post->views_count) }} views</span>
                 </div>
 
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-zinc-950 dark:text-zinc-50 tracking-tight leading-tight">
+                <h1 class="text-3xl sm:text-4xl font-bold text-zinc-950 dark:text-zinc-50 tracking-tight leading-tight">
                     {{ $post->title }}
                 </h1>
             </header>
@@ -106,33 +102,27 @@
                 {!! $post->content !!}
             </div>
 
-            <!-- Footer Artikel & Penulis -->
-            <div class="mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800/80">
-                <div class="p-6 rounded-xl bg-zinc-100/50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-4">
-                    <div>
-                        <span class="text-xs font-mono text-zinc-500 uppercase tracking-wider block mb-1">Penulis</span>
-                        <p class="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
-                            {{ $post->user->name ?? 'DevBlog Contributor' }}
-                        </p>
-                        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                            Software engineer & technical writer.
-                        </p>
-                    </div>
-                    <a href="{{ route('home') }}" wire:navigate class="px-3.5 py-1.5 text-xs font-mono bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg hover:border-zinc-400 dark:hover:border-zinc-600 transition shrink-0">
-                        &larr; Indeks
-                    </a>
+            <!-- Sign-off Penulis & Navigasi -->
+            <div class="mt-16 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono text-zinc-500 dark:text-zinc-400">
+                <div>
+                    Ditulis oleh <span class="font-semibold text-zinc-900 dark:text-zinc-100">{{ $post->user->name ?? 'Devis Roomi' }}</span>.
                 </div>
+                <a href="{{ route('home') }}" wire:navigate class="hover:text-zinc-900 dark:hover:text-zinc-100 underline underline-offset-2">
+                    &larr; Indeks Catatan
+                </a>
             </div>
         </article>
 
-        <!-- Form Langganan Newsletter -->
-        <livewire:subscribe-form />
+        <!-- Newsletter Footnote -->
+        <div class="mt-14 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+            <livewire:subscribe-form />
+        </div>
     </main>
 
-    <footer class="border-t border-zinc-200 dark:border-zinc-800/80 py-8 text-center text-xs font-mono text-zinc-500">
-        <div class="max-w-3xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span>&copy; {{ date('Y') }} DevBlog. All rights reserved.</span>
-            <span>Minimal editorial &bull; Livewire 4</span>
+    <footer class="py-8 text-center text-xs font-mono text-zinc-400 dark:text-zinc-600">
+        <div class="max-w-2xl mx-auto px-5 flex items-center justify-between">
+            <span>&copy; {{ date('Y') }} Devis Roomi</span>
+            <span>Estetika Editorial &bull; Livewire</span>
         </div>
     </footer>
 </div>
